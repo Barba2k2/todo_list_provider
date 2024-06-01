@@ -2,10 +2,10 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:synchronized/synchronized.dart';
 
-class SqlConnectionFactory {
-  SqlConnectionFactory._();
+class SqliteConnectionFactory {
+  SqliteConnectionFactory._();
 
-  static SqlConnectionFactory? _instance;
+  static SqliteConnectionFactory? _instance;
 
   static const _VERSION = 1;
   static const _DATABSE_NAME = 'TODO_LIST_PROVIDER';
@@ -13,8 +13,8 @@ class SqlConnectionFactory {
   Database? _db;
   final _lock = Lock();
 
-  factory SqlConnectionFactory() {
-    _instance ??= SqlConnectionFactory._();
+  factory SqliteConnectionFactory() {
+    _instance ??= SqliteConnectionFactory._();
     return _instance!;
   }
 
