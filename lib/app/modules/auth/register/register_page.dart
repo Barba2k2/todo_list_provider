@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_provider/app/core/widgets/todo_list_field.dart';
 
 import '../../../core/ui/theme_extensions.dart';
+import '../../../core/widgets/todo_list_field.dart';
 import '../../../core/widgets/todo_list_logo.dart';
 
 class RegisterPage extends StatelessWidget {

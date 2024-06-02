@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_provider/app/core/ui/todo_list_ui_config.dart';
 
 import 'core/database/sqlite_adm_connection.dart';
+import 'core/ui/todo_list_ui_config.dart';
 import 'modules/auth/auth_module.dart';
 import 'modules/splash/splash_page.dart';
 

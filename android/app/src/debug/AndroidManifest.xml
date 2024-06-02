@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="br.com.brabtech.todo_list_provider">
-    <!-- Flutter needs it to communicate with the running application
-        to allow setting breakpoints, to provide hot reload, etc.
-    -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <application android:usesClearttextTraffic="true">
 
-    </manifest>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application android:usesCleartextTraffic="true">
+        <!-- Outras configurações específicas para debug, se houver -->
+    </application>
+</manifest>
