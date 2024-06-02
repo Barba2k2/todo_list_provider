@@ -61,7 +61,14 @@ class LoginPage extends StatelessWidget {
                                     // ignore: sort_child_properties_last
                                     child: const Padding(
                                       padding: EdgeInsets.all(10),
-                                      child: Text('Login'),
+                                      child: Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16,
+                                        ),
+                                      ),
                                     ),
                                     style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
