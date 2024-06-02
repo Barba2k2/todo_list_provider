@@ -5,18 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "todo_list_provider",
+      "name": "todo_list",
       "request": "launch",
       "type": "dart"
     },
     {
-      "name": "todo_list_provider (profile mode)",
+      "name": "todo_list (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "todo_list_provider (release mode)",
+      "name": "todo_list (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

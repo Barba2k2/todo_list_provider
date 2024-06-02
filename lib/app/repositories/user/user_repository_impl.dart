@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,9 +8,9 @@ import '../../exceptions/auth_exception.dart';
 import './user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
-  FirebaseAuth _firebaseAuth;
+  final FirebaseAuth _firebaseAuth;
 
-  UserRepositoryImpl({
+  const UserRepositoryImpl({
     required FirebaseAuth firebaseAuth,
   }) : _firebaseAuth = firebaseAuth;
 

@@ -1,11 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:validatorless/validatorless.dart';
 
 import '../../../core/ui/theme_extensions.dart';
 import '../../../core/widgets/todo_list_field.dart';
 import '../../../core/widgets/todo_list_logo.dart';
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+
+  final _formKey = GlobalKey<FormState>();
+  final _emailEC = TextEditingController();
+  final _passwordEC = TextEditingController();
+  final _confirmPasswordEC = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailEC.dispose();
+    _passwordEC.dispose();
+    _confirmPasswordEC.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +77,11 @@ class RegisterPage extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.width * 0.5,
             child: const FittedBox(
-              child: TodoListLogo(),
               fit: BoxFit.fitHeight,
+              child: TodoListLogo(),
             ),
           ),
           Padding(
@@ -70,10 +90,16 @@ class RegisterPage extends StatelessWidget {
               vertical: 20,
             ),
             child: Form(
+              key: _formKey,
               child: Column(
                 children: [
                   TodoListField(
                     label: 'E-mail',
+                    controller: _emailEC,
+                    validator: Validatorless.multiple([
+                      Validatorless.required('E-mail obrigatório'),
+                      Validatorless.email('E-mail inválido'),
+                    ]),
                   ),
                   const SizedBox(
                     height: 20,
@@ -81,6 +107,14 @@ class RegisterPage extends StatelessWidget {
                   TodoListField(
                     label: 'Senha',
                     obscureText: true,
+                    controller: _passwordEC,
+                    validator: Validatorless.multiple([
+                      Validatorless.required('Senha obrigatória'),
+                      Validatorless.min(
+                        6,
+                        'Senha deve ter no mínimo 6 caracteres',
+                      ),
+                    ]),
                   ),
                   const SizedBox(
                     height: 20,
@@ -88,6 +122,20 @@ class RegisterPage extends StatelessWidget {
                   TodoListField(
                     label: 'Confirmação de senha',
                     obscureText: true,
+                    controller: _confirmPasswordEC,
+                    validator: Validatorless.multiple([
+                      Validatorless.required(
+                        'Confirmação de senha obrigatória',
+                      ),
+                      Validatorless.min(
+                        6,
+                        'Confirmação de senha deve ter no mínimo 6 caracteres',
+                      ),
+                      Validatorless.compare(
+                        _passwordEC,
+                        'Senha diferente de Confirmação Senha',
+                      ),
+                    ]),
                   ),
                   const SizedBox(
                     height: 20,
@@ -95,16 +143,19 @@ class RegisterPage extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomRight,
                     child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text('Cadastrar'),
-                      ),
+                      onPressed: () {
+                        final formValid =
+                            _formKey.currentState?.validate() ?? false;
+                      },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                         // primary: Theme.of(context).buttonColor,
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text('Cadastrar'),
                       ),
                     ),
                   ),

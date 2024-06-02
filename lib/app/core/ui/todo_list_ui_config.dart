@@ -5,14 +5,12 @@ class TodoListUiConfig {
   TodoListUiConfig._();
 
   static ThemeData get theme => ThemeData(
-        textTheme: GoogleFonts.mandaliTextTheme(
-          
-        ),
+        textTheme: GoogleFonts.mandaliTextTheme(),
         primaryColor: const Color(0xFF5C77CE),
         primaryColorLight: const Color(0xFFABC8F7),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            primary: const Color(0xFF5C77CE),
+            backgroundColor: const Color(0xFF5C77CE),
           ),
         ),
       );

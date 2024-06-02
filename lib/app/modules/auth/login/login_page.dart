@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/button_view.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 import '../../../core/widgets/todo_list_field.dart';
 import '../../../core/widgets/todo_list_logo.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +58,7 @@ class LoginPage extends StatelessWidget {
                                   ),
                                   ElevatedButton(
                                     onPressed: () {},
+                                    // ignore: sort_child_properties_last
                                     child: const Padding(
                                       padding: EdgeInsets.all(10),
                                       child: Text('Login'),
