@@ -14,6 +14,7 @@ class RegisterPage extends StatelessWidget {
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: SafeArea(
           child: AppBar(
+            centerTitle: false,
             automaticallyImplyLeading: false,
             backgroundColor: Colors.white,
             title: Column(
