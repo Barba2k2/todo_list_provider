@@ -13,6 +13,9 @@ dependencies:
   provider: ^5.0.0
   sqflite: ^2.0.0+3
   path: ^1.8.0
+  # path_provider: ^2.0.4
+  google_fonts: 2.1.0
+  flutter_signin_button: ^2.0.0
 
   cupertino_icons: ^1.0.2
 
@@ -24,5 +27,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # assets:
-  #   - assets/
+  assets:
+    - assets/
