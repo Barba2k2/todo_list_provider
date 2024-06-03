@@ -1,8 +1,9 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, body_might_complete_normally_nullable
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../exceptions/auth_exception.dart';
 import './user_repository.dart';
@@ -95,5 +96,58 @@ class UserRepositoryImpl implements UserRepository {
             'Erro ao enviar e-mail de recuperação de senha, por favor tente novamente',
       );
     }
+  }
+
+  @override
+  Future<User?> googleLogin() async {
+    try {
+      final googleSignIn = GoogleSignIn();
+
+      final googleUser = await googleSignIn.signIn();
+
+      if (googleUser != null) {
+        final loginMethods = await _firebaseAuth.fetchSignInMethodsForEmail(
+          googleUser.email,
+        );
+
+        if (loginMethods.contains('password')) {
+          throw AuthException(
+            message:
+                'Você já se cadastrou com esse e-mail, por favor use-o para entrar!!',
+          );
+        } else {
+          final googleAuth = await googleUser.authentication;
+
+          final firebaseCredential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
+
+          var userCredetial = await _firebaseAuth.signInWithCredential(
+            firebaseCredential,
+          );
+
+          return userCredetial.user;
+        }
+      }
+    } on FirebaseAuthException catch (e, s) {
+      log('Error on google login', error: e, stackTrace: s);
+      if (e.code == 'account-exists-with-different-credential') {
+        throw AuthException(
+          message:
+              'Você já se cadastrou com o Google, por favor use-o para entrar!!',
+        );
+      } else {
+        throw AuthException(
+          message: e.message ?? 'Erro ao realizar login com o Google',
+        );
+      }
+    }
+  }
+  
+  @override
+  Future<void> googleLogout() async {
+    await GoogleSignIn().signOut();
+    _firebaseAuth.signOut();
   }
 }
