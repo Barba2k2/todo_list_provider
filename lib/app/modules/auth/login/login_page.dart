@@ -1,11 +1,48 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:provider/provider.dart';
+import 'package:validatorless/validatorless.dart';
 
+import '../../../core/notifier/default_listener_notifier.dart';
+import '../../../core/ui/messages.dart';
 import '../../../core/widgets/todo_list_field.dart';
 import '../../../core/widgets/todo_list_logo.dart';
+import 'login_controller.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailEC = TextEditingController();
+  final _passwordEC = TextEditingController();
+  final _emailFN = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    DefaultListenerNotifier(
+      changeNotifier: context.read<LoginController>(),
+    ).listener(
+      context: context,
+      everCallback: (notifier, listenerInstance) {
+        if (notifier is LoginController) {
+          if (notifier.hasInfo) {
+            Messages.of(context).showInfo(notifier.infoMessage!);
+          }
+        }
+      },
+      successCallback: (notifier, listenerInstance) {
+        log('Logged in with success');
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +70,17 @@ class LoginPage extends StatelessWidget {
                           vertical: 20,
                         ),
                         child: Form(
+                          key: _formKey,
                           child: Column(
                             children: [
                               TodoListField(
                                 label: 'E-mail',
+                                controller: _emailEC,
+                                validator: Validatorless.multiple([
+                                  Validatorless.required('E-mail obrigatório'),
+                                  Validatorless.email('E-mail inválido'),
+                                ]),
+                                focusNode: _emailFN,
                               ),
                               const SizedBox(
                                 height: 20,
@@ -44,6 +88,12 @@ class LoginPage extends StatelessWidget {
                               TodoListField(
                                 label: 'Senha',
                                 obscureText: true,
+                                controller: _passwordEC,
+                                validator: Validatorless.multiple([
+                                  Validatorless.required('Senha obrigatória'),
+                                  Validatorless.min(6,
+                                      'Senha deve conter pelo menos 6 caracteres'),
+                                ]),
                               ),
                               const SizedBox(
                                 height: 10,
@@ -53,12 +103,38 @@ class LoginPage extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      if (_emailEC.text.isNotEmpty) {
+                                        context
+                                            .read<LoginController>()
+                                            .forgotPassword(_emailEC.text);
+                                      } else {
+                                        _emailFN.requestFocus();
+                                        Messages.of(context).showError(
+                                          'Informe um e-mail para recuperar a senha',
+                                        );
+                                      }
+                                    },
                                     child: const Text('Esqueceu sua senha?'),
                                   ),
                                   ElevatedButton(
-                                    onPressed: () {},
-                                    // ignore: sort_child_properties_last
+                                    onPressed: () {
+                                      final formValid =
+                                          _formKey.currentState?.validate() ??
+                                              false;
+                                      if (formValid) {
+                                        context.read<LoginController>().login(
+                                              _emailEC.text,
+                                              _passwordEC.text,
+                                            );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      // primary: Theme.of(context).buttonColor,
+                                    ),
                                     child: const Padding(
                                       padding: EdgeInsets.all(10),
                                       child: Text(
@@ -69,12 +145,6 @@ class LoginPage extends StatelessWidget {
                                           fontSize: 16,
                                         ),
                                       ),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      // primary: Theme.of(context).buttonColor,
                                     ),
                                   ),
                                 ],
