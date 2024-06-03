@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
+import '../../../core/notifier/default_listener_notifier.dart';
 import '../../../core/ui/theme_extensions.dart';
 import '../../../core/widgets/todo_list_field.dart';
 import '../../../core/widgets/todo_list_logo.dart';
@@ -32,21 +35,17 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    context.read<RegisterController>().addListener(
-      () {
-        final controller = context.read<RegisterController>();
-        var success = controller.success;
-        var error = controller.error;
-        if (success) {
-          Navigator.of(context).pop();
-        } else if (error != null && error.isNotEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(error),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+    final dafaultListener = DefaultListenerNotifier(
+      changeNotifier: context.read<RegisterController>(),
+    );
+    dafaultListener.listener(
+      context: context,
+      successCallback: (notifier, listenerInstance) {
+        listenerInstance.dispose();
+        Navigator.of(context).pop();
+      },
+      errorCallback: (notifier, listenerInstance) {
+        log('################ ERROR ################');
       },
     );
   }

@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
-
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 
 import '../../exceptions/auth_exception.dart';
 import './user_repository.dart';
@@ -31,12 +31,12 @@ class UserRepositoryImpl implements UserRepository {
         );
         if (loginTypes.contains('password')) {
           throw AuthException(
-            message: 'Email já utilizada, por favor escolha outro e-mail',
+            message: 'Email já utilizado, por favor escolha outro e-mail',
           );
         } else {
           throw AuthException(
             message:
-                'Você já se cadastrou com o Google, por favor use-o para entrar!!',
+                'Você já se cadastrou com esse e-mail, por favor use-o para entrar!!',
           );
         }
       } else {
@@ -44,6 +44,28 @@ class UserRepositoryImpl implements UserRepository {
           message: e.message ?? 'Erro ao cadastar usuário',
         );
       }
+    }
+  }
+
+  @override
+  Future<User?> login(String email, String password) async {
+    try {
+      final userCredentials = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      return userCredentials.user;
+    } on PlatformException catch (e, s) {
+      log('Error logging in user', error: e, stackTrace: s);
+      throw AuthException(
+        message: e.message ?? 'Erro ao realizar login',
+      );
+    } on FirebaseAuthException catch (e, s) {
+      log('Error logging in user', error: e, stackTrace: s);
+      throw AuthException(
+        message: e.message ?? 'Erro ao realizar login',
+      );
     }
   }
 }
