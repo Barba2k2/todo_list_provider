@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../core/ui/theme_extensions.dart';
 import 'widgets/home_drawer.dart';
+import 'widgets/home_filter.dart';
+import 'widgets/home_header.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -12,12 +15,54 @@ class HomePage extends StatelessWidget {
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: SafeArea(
           child: AppBar(
-            title: const Text('Home Page'),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            iconTheme: IconThemeData(
+              color: context.primaryColor,
+            ),
+            actions: [
+              PopupMenuButton(
+                color: Colors.white,
+                icon: const Icon(
+                  Icons.filter_list_alt,
+                  size: 36,
+                ),
+                itemBuilder: (_) => [
+                  const PopupMenuItem<bool>(
+                    child: Text('Mostrar tarefas concluidas'),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
+      backgroundColor: const Color(0xFFFAFBFA),
       drawer: HomeDrawer(),
-      body: Container(),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+                minWidth: constraints.maxWidth,
+              ),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: const IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      HomeHeader(),
+                      HomeFilter(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
