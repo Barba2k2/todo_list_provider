@@ -4,6 +4,8 @@ import '../../core/ui/theme_extensions.dart';
 import 'widgets/home_drawer.dart';
 import 'widgets/home_filter.dart';
 import 'widgets/home_header.dart';
+import 'widgets/home_tasks.dart';
+import 'widgets/home_week_filter.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -16,7 +18,7 @@ class HomePage extends StatelessWidget {
         child: SafeArea(
           child: AppBar(
             elevation: 0,
-            backgroundColor: Colors.transparent,
+            backgroundColor: const Color(0xFFFAFBFA),
             iconTheme: IconThemeData(
               color: context.primaryColor,
             ),
@@ -55,6 +57,8 @@ class HomePage extends StatelessWidget {
                     children: [
                       HomeHeader(),
                       HomeFilter(),
+                      HomeWeekFilter(),
+                      HomeTasks(),
                     ],
                   ),
                 ),
