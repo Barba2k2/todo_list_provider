@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/ui/theme_extensions.dart';
+import '../tasks/tasks_module.dart';
 import 'widgets/home_drawer.dart';
 import 'widgets/home_filter.dart';
 import 'widgets/home_header.dart';
@@ -9,6 +10,31 @@ import 'widgets/home_week_filter.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+
+  void _goToCreateTask(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 400),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          animation = CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeInQuad,
+          );
+          return ScaleTransition(
+            scale: animation,
+            alignment: Alignment.bottomRight,
+            child: child,
+          );
+        },
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return TasksModule().getPage(
+            '/tasks/create',
+            context,
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +67,14 @@ class HomePage extends StatelessWidget {
       ),
       backgroundColor: const Color(0xFFFAFBFA),
       drawer: HomeDrawer(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _goToCreateTask(context),
+        backgroundColor: context.primaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: const Icon(Icons.add_rounded),
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(

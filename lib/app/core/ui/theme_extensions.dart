@@ -10,6 +10,6 @@ extension ThemeExtensions on BuildContext {
   TextStyle get titleStyle => TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.bold,
-        color: Colors.grey[800]!,
+        color: Colors.grey[500]!,
       );
 }
