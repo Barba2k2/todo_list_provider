@@ -3,14 +3,9 @@ import 'package:flutter/material.dart';
 import '../../../core/ui/theme_extensions.dart';
 import 'todo_card_filter.dart';
 
-class HomeFilter extends StatefulWidget {
+class HomeFilter extends StatelessWidget {
   const HomeFilter({super.key});
 
-  @override
-  State<HomeFilter> createState() => _HomeFilterState();
-}
-
-class _HomeFilterState extends State<HomeFilter> {
   @override
   Widget build(BuildContext context) {
     return Column(

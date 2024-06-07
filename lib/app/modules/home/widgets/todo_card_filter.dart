@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../core/ui/theme_extensions.dart';
 
-class TodoCardFilter extends StatefulWidget {
+class TodoCardFilter extends StatelessWidget {
   const TodoCardFilter({super.key});
 
-  @override
-  State<TodoCardFilter> createState() => _TodoCardFilterState();
-}
-
-class _TodoCardFilterState extends State<TodoCardFilter> {
   @override
   Widget build(BuildContext context) {
     return Container(
