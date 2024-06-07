@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: 
+    sdk: flutter
   
   cupertino_icons: ^1.0.6
   provider: ^6.1.2
@@ -24,6 +26,7 @@ dependencies:
   synchronized: ^3.1.0+1
   google_sign_in: ^6.2.1
   date_picker_timeline: ^1.2.6
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:

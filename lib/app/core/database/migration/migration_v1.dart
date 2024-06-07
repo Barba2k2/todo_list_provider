@@ -9,7 +9,7 @@ class MigrationV1 implements Migration {
       '''
         CREATE TABLE todo (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          description VARCHAR(500) NOT NULL,
+          descricao VARCHAR(500) NOT NULL,
           data_hora DATETIME,
           finalizado INTEGER
         )
