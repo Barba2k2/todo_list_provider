@@ -134,4 +134,15 @@ class HomeController extends DefaultChangeNotifier {
 
     refreshPage();
   }
+
+  void clearTasks() {
+    allTasks.clear();
+    filteredTasks.clear();
+    todayTotalTasks = null;
+    tomorrowTotalTasks = null;
+    weekTotalTasks = null;
+    selectedDate = null;
+    initialDateOfWeek = null;
+    notifyListeners();
+  }
 }

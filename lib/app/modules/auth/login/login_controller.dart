@@ -3,14 +3,18 @@ import 'dart:developer';
 import '../../../core/notifier/default_change_notifier.dart';
 import '../../../exceptions/auth_exception.dart';
 import '../../../services/user/user_service.dart';
+import '../../home/home_controller.dart';
 
 class LoginController extends DefaultChangeNotifier {
   final UserService _userService;
+  final HomeController _homeController;
   String? infoMessage;
 
   LoginController({
     required UserService userService,
-  }) : _userService = userService;
+    required HomeController homeController,
+  })  : _userService = userService,
+        _homeController = homeController;
 
   bool get hasInfo => infoMessage != null;
 
@@ -23,6 +27,7 @@ class LoginController extends DefaultChangeNotifier {
       final user = await _userService.login(email, passowrd);
 
       if (user != null) {
+        _homeController.clearTasks();
         success();
       } else {
         setError('Usuário ou senha inválidos!');
@@ -72,6 +77,7 @@ class LoginController extends DefaultChangeNotifier {
       final user = await _userService.googleLogin();
 
       if (user != null) {
+        _homeController.clearTasks();
         success();
       } else {
         _userService.logout();
@@ -85,5 +91,11 @@ class LoginController extends DefaultChangeNotifier {
       hideLoading();
       notifyListeners();
     }
+  }
+
+  Future<void> logout() async {
+    await _userService.logout();
+    _homeController.clearTasks();
+    notifyListeners();
   }
 }
