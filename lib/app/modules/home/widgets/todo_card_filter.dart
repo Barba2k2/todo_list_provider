@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 import '../../../core/ui/theme_extensions.dart';
 import '../../../models/task_filter_enum.dart';

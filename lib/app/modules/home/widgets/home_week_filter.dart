@@ -18,10 +18,10 @@ class HomeWeekFilter extends StatelessWidget {
           'DIA DA SEMANA',
           style: context.titleStyle,
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
-        Container(
+        SizedBox(
           height: 96,
           child: DatePicker(
             DateTime.now(),
@@ -31,13 +31,13 @@ class HomeWeekFilter extends StatelessWidget {
             selectionColor: context.primaryColor,
             selectedTextColor: Colors.white,
             daysCount: 7,
-            monthTextStyle: TextStyle(
+            monthTextStyle: const TextStyle(
               fontSize: 8,
             ),
-            dayTextStyle: TextStyle(
+            dayTextStyle: const TextStyle(
               fontSize: 14,
             ),
-            dateTextStyle: TextStyle(
+            dateTextStyle: const TextStyle(
               fontSize: 20,
             ),
           ),
