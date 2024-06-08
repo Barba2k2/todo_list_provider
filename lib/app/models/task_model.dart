@@ -1,12 +1,12 @@
 class TaskModel {
   final int id;
-  final String descirption;
+  final String description;
   final DateTime dateTime;
   final bool finished;
 
   TaskModel({
     required this.id,
-    required this.descirption,
+    required this.description,
     required this.dateTime,
     required this.finished,
   });
@@ -14,7 +14,7 @@ class TaskModel {
   factory TaskModel.loadFromDB(Map<String, dynamic> task) {
     return TaskModel(
       id: task['id'],
-      descirption: task['descricao'],
+      description: task['descricao'],
       dateTime: DateTime.parse(task['data_hora']),
       finished: task['finalizado'] == 1,
     );

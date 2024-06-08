@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/ui/theme_extensions.dart';
+import '../../../models/task_filter_enum.dart';
+import '../../../models/task_model.dart';
+import '../home_controller.dart';
 import 'task.dart';
 
 class HomeTasks extends StatelessWidget {
@@ -14,17 +19,25 @@ class HomeTasks extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
-        Text(
-          'TASK\'S DE HOJE',
-          style: context.titleStyle,
+        Selector<HomeController, String>(
+          selector: (context, controller) {
+            return controller.filterSelect.description;
+          },
+          builder: (context, value, child) {
+            return Text(
+              value,
+              style: context.titleStyle,
+            );
+          },
         ),
-        const Column(
-          children: [
-            Task(),
-            Task(),
-            Task(),
-          ],
-        )
+        Column(
+          children: context
+              .select<HomeController, List<TaskModel>>(
+                (controller) => controller.filteredTasks,
+              )
+              .map((tasks) => Task(model: tasks))
+              .toList(),
+        ),
       ],
     );
   }
