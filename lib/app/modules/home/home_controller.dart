@@ -16,17 +16,20 @@ class HomeController extends DefaultChangeNotifier {
   DateTime? initialDateOfWeek;
   DateTime? selectedDate;
   bool showFinishingTasks = false;
+  String? userId;
 
   HomeController({
     required TasksService tasksService,
   }) : _tasksService = tasksService;
 
   Future<void> loadTotalTasks() async {
+    if (userId == null) return;
+
     final allTasks = await Future.wait(
       [
-        _tasksService.getToday(),
-        _tasksService.getTomorrow(),
-        _tasksService.getWeek(),
+        _tasksService.getToday(userId!),
+        _tasksService.getTomorrow(userId!),
+        _tasksService.getWeek(userId!),
       ],
     );
 
@@ -53,20 +56,25 @@ class HomeController extends DefaultChangeNotifier {
   }
 
   Future<void> findTasks({required TaskFilterEnum filter}) async {
+    if(userId == null) return;
+
     filterSelect = filter;
+
     showLoading();
+
     notifyListeners();
+
     List<TaskModel> tasks;
 
     switch (filter) {
       case TaskFilterEnum.today:
-        tasks = await _tasksService.getToday();
+        tasks = await _tasksService.getToday(userId!);
         break;
       case TaskFilterEnum.tomorrow:
-        tasks = await _tasksService.getTomorrow();
+        tasks = await _tasksService.getTomorrow(userId!);
         break;
       case TaskFilterEnum.week:
-        final weekModel = await _tasksService.getWeek();
+        final weekModel = await _tasksService.getWeek(userId!);
         initialDateOfWeek = weekModel.startDate;
         tasks = weekModel.tasks;
         break;
@@ -136,13 +144,13 @@ class HomeController extends DefaultChangeNotifier {
   }
 
   void clearTasks() {
-    allTasks.clear();
-    filteredTasks.clear();
     todayTotalTasks = null;
     tomorrowTotalTasks = null;
     weekTotalTasks = null;
-    selectedDate = null;
+    allTasks = [];
+    filteredTasks = [];
     initialDateOfWeek = null;
+    selectedDate = null;
     notifyListeners();
   }
 }

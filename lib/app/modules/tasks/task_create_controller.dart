@@ -6,6 +6,7 @@ import '../../services/tasks/tasks_service.dart';
 class TaskCreateController extends DefaultChangeNotifier {
   final TasksService _tasksService;
   DateTime? _selectedDate;
+  String? _userId;
 
   TaskCreateController({
     required TasksService tasksService,
@@ -19,14 +20,19 @@ class TaskCreateController extends DefaultChangeNotifier {
 
   DateTime? get selectedDate => _selectedDate;
 
+  set userId(String? userId) {
+    _userId = userId;
+  }
+
   Future<void> save(String description) async {
     try {
       showLoadingAndResetState();
       notifyListeners();
-      if (_selectedDate != null) {
+      if (_selectedDate != null && _userId != null) {
         await _tasksService.save(
           _selectedDate!,
           description,
+          _userId!,
         );
         success();
       } else {
