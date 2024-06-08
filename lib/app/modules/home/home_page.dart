@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/notifier/default_listener_notifier.dart';
 import '../../core/ui/theme_extensions.dart';
@@ -82,17 +83,27 @@ class _HomePageState extends State<HomePage> {
               color: context.primaryColor,
             ),
             actions: [
-              PopupMenuButton(
-                color: Colors.white,
-                icon: const Icon(
-                  Icons.filter_list_alt,
-                  size: 36,
-                ),
-                itemBuilder: (_) => [
-                  const PopupMenuItem<bool>(
-                    child: Text('Mostrar tarefas concluidas'),
-                  ),
-                ],
+              Consumer<HomeController>(
+                builder: (context, controller, child) {
+                  final showOrHide =
+                      controller.showFinishingTasks ? 'Esconder' : 'Mostrar';
+                  return PopupMenuButton(
+                    color: Colors.white,
+                    icon: const Icon(
+                      Icons.filter_list_alt,
+                      size: 36,
+                    ),
+                    itemBuilder: (_) => [
+                      PopupMenuItem<bool>(
+                        value: true,
+                        child: Text('$showOrHide tarefas concluídas'),
+                      ),
+                    ],
+                    onSelected: (value) {
+                      controller.showOrHideFinishingTasks();
+                    },
+                  );
+                },
               ),
             ],
           ),
