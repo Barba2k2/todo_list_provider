@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import '../../core/notifier/default_change_notifier.dart';
 import '../../models/task_filter_enum.dart';
 import '../../models/task_model.dart';
@@ -76,8 +74,14 @@ class HomeController extends DefaultChangeNotifier {
     filteredTasks = tasks;
     allTasks = tasks;
 
-    if (filter == TaskFilterEnum.week && initialDateOfWeek != null) {
-      filterByDay(initialDateOfWeek!);
+    if (filter == TaskFilterEnum.week) {
+      if (selectedDate != null) {
+        filterByDay(selectedDate!);
+      } else if (initialDateOfWeek != null) {
+        filterByDay(initialDateOfWeek!);
+      }
+    } else {
+      selectedDate = null;
     }
 
     hideLoading();
