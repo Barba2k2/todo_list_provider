@@ -39,7 +39,7 @@ class TaskCreateController extends DefaultChangeNotifier {
         log('Controller - Saved Task');
         success();
       } else {
-        setError('Data da task não selecionada ou User ID não disponível');
+        setError('Data da task não selecionada');
       }
     } catch (e, s) {
       log('Error on saving task', error: e, stackTrace: s);

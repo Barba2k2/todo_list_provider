@@ -15,7 +15,6 @@ class TasksRepositoryImpl implements TasksRepository {
   Future<void> save(DateTime date, String description, String userId) async {
     try {
       final conn = await _sqliteConnectionFactory.openConnection();
-
       await conn.insert(
         'todo',
         {
@@ -26,6 +25,7 @@ class TasksRepositoryImpl implements TasksRepository {
           'user_id': userId,
         },
       );
+      log('Task saved: $description, $date, $userId');
     } catch (e, s) {
       log('Error on save task on Repository', error: e, stackTrace: s);
     }
@@ -46,8 +46,7 @@ class TasksRepositoryImpl implements TasksRepository {
       '''
         SELECT *
         FROM todo
-        WHERE data_hora
-        BETWEEN ? AND ?
+        WHERE data_hora BETWEEN ? AND ?
         AND user_id = ?
         ORDER BY data_hora
       ''',
@@ -58,6 +57,7 @@ class TasksRepositoryImpl implements TasksRepository {
       ],
     );
 
+    log('Tasks retrieved: ${result.length} tasks for user $userId between $startFilter and $endFilter');
     return result
         .map(
           (e) => TaskModel.loadFromDB(e),
@@ -68,9 +68,7 @@ class TasksRepositoryImpl implements TasksRepository {
   @override
   Future<void> checkOrUncheckTask(TaskModel task) async {
     final conn = await _sqliteConnectionFactory.openConnection();
-
     final finished = task.finished ? 1 : 0;
-
     await conn.rawUpdate(
       '''
         UPDATE todo
@@ -84,5 +82,6 @@ class TasksRepositoryImpl implements TasksRepository {
         task.userId,
       ],
     );
+    log('Task updated: ${task.id} - finished: $finished');
   }
 }

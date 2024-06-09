@@ -11,8 +11,8 @@ class TasksServiceImpl implements TasksService {
   }) : _tasksRepository = tasksRepository;
 
   @override
-  Future<void> save(DateTime date, String description, String userId) =>
-      _tasksRepository.save(date, description, userId);
+  Future<void> save(DateTime date, String description, String userId) async =>
+      await _tasksRepository.save(date, description, userId);
 
   @override
   Future<List<TaskModel>> getToday(String userId) {
