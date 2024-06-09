@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +39,10 @@ class CalendarButton extends StatelessWidget {
           ),
         );
 
-        context.read<TaskCreateController>().selectedDate = selectedDate;
+        if (selectedDate != null) {
+          log('Seletec Date: $selectedDate');
+          context.read<TaskCreateController>().selectedDate = selectedDate;
+        }
       },
       borderRadius: BorderRadius.circular(30),
       child: Container(

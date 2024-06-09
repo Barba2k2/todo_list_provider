@@ -56,7 +56,7 @@ class HomeController extends DefaultChangeNotifier {
   }
 
   Future<void> findTasks({required TaskFilterEnum filter}) async {
-    if(userId == null) return;
+    if (userId == null) return;
 
     filterSelect = filter;
 
@@ -109,9 +109,7 @@ class HomeController extends DefaultChangeNotifier {
     selectedDate = date;
 
     filteredTasks = allTasks.where(
-      (task) {
-        return task.dateTime == date;
-      },
+      (task) => task.dateTime == date,
     ).toList();
 
     notifyListeners();

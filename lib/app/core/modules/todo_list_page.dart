@@ -4,14 +4,14 @@ import 'package:provider/single_child_widget.dart';
 
 class TodoListPage extends StatelessWidget {
   final List<SingleChildWidget>? _bindings;
-  final WidgetBuilder _pege;
+  final WidgetBuilder _page;
 
   const TodoListPage({
     super.key,
     required List<SingleChildWidget>? bindings,
     required WidgetBuilder page,
-  })   : _bindings = bindings,
-        _pege = page;
+  })  : _bindings = bindings,
+        _page = page;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class TodoListPage extends StatelessWidget {
             ),
           ],
       child: Builder(
-        builder: (context) => _pege(context),
+        builder: (context) => _page(context),
       ),
     );
   }

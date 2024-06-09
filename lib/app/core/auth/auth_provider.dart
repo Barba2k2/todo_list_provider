@@ -12,7 +12,9 @@ class TodoListAuthProvider extends ChangeNotifier {
     required FirebaseAuth firebaseAuth,
     required UserService userService,
   })  : _firebaseAuth = firebaseAuth,
-        _userService = userService;
+        _userService = userService {
+    loadListener();
+  }
 
   Future<void> logout() => _userService.logout();
 
@@ -20,8 +22,21 @@ class TodoListAuthProvider extends ChangeNotifier {
 
   void loadListener() {
     _firebaseAuth.userChanges().listen(
-          (_) => notifyListeners(),
-        );
+      (user) {
+        notifyListeners();
+        if (user != null) {
+          TodoListNavigator.to.pushNamedAndRemoveUntil(
+            '/home',
+            (route) => false,
+          );
+        } else {
+          TodoListNavigator.to.pushNamedAndRemoveUntil(
+            '/login',
+            (route) => false,
+          );
+        }
+      },
+    );
 
     _firebaseAuth.authStateChanges().listen(
       (user) {
@@ -39,4 +54,6 @@ class TodoListAuthProvider extends ChangeNotifier {
       },
     );
   }
+
+  String? get userId => _firebaseAuth.currentUser?.uid;
 }

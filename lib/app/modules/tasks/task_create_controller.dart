@@ -15,6 +15,7 @@ class TaskCreateController extends DefaultChangeNotifier {
   set selectedDate(DateTime? selectDate) {
     resetState();
     _selectedDate = selectDate;
+    log('Controller Selected Date: $_selectedDate');
     notifyListeners();
   }
 
@@ -29,14 +30,16 @@ class TaskCreateController extends DefaultChangeNotifier {
       showLoadingAndResetState();
       notifyListeners();
       if (_selectedDate != null && _userId != null) {
+        log('Saving Task: $description, $_selectedDate, $_userId');
         await _tasksService.save(
           _selectedDate!,
           description,
           _userId!,
         );
+        log('Controller - Saved Task');
         success();
       } else {
-        setError('Data da task não selecionada');
+        setError('Data da task não selecionada ou User ID não disponível');
       }
     } catch (e, s) {
       log('Error on saving task', error: e, stackTrace: s);

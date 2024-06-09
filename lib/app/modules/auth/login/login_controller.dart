@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import '../../../core/auth/auth_provider.dart';
 import '../../../core/notifier/default_change_notifier.dart';
 import '../../../exceptions/auth_exception.dart';
 import '../../../services/user/user_service.dart';
@@ -8,15 +9,28 @@ import '../../home/home_controller.dart';
 class LoginController extends DefaultChangeNotifier {
   final UserService _userService;
   final HomeController _homeController;
+  final TodoListAuthProvider _authProvider;
   String? infoMessage;
+
+  bool _isDisposed = false;
 
   LoginController({
     required UserService userService,
     required HomeController homeController,
+    required TodoListAuthProvider authProvider,
   })  : _userService = userService,
-        _homeController = homeController;
+        _homeController = homeController,
+        _authProvider = authProvider;
 
   bool get hasInfo => infoMessage != null;
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
+  bool get disposed => _isDisposed;
 
   Future<void> login(String email, String passowrd) async {
     try {
@@ -25,8 +39,11 @@ class LoginController extends DefaultChangeNotifier {
       notifyListeners();
 
       final user = await _userService.login(email, passowrd);
+      log('User: $user');
 
       if (user != null) {
+        log('User ID: ${_authProvider.userId}');
+        _homeController.userId = _authProvider.userId;
         _homeController.clearTasks();
         success();
       } else {
@@ -36,8 +53,10 @@ class LoginController extends DefaultChangeNotifier {
       log('Error on login user', error: e, stackTrace: s);
       setError(e.message);
     } finally {
-      hideLoading();
-      notifyListeners();
+      if (!disposed) {
+        hideLoading();
+        notifyListeners();
+      }
     }
   }
 
@@ -61,9 +80,10 @@ class LoginController extends DefaultChangeNotifier {
 
       setError('Erro ao recuperar a senha');
     } finally {
-      hideLoading();
-
-      notifyListeners();
+      if (!disposed) {
+        hideLoading();
+        notifyListeners();
+      }
     }
   }
 
@@ -76,7 +96,11 @@ class LoginController extends DefaultChangeNotifier {
 
       final user = await _userService.googleLogin();
 
+      log('User: $user');
+
       if (user != null) {
+        log('User ID: ${_authProvider.userId}');
+        _homeController.userId = _authProvider.userId;
         _homeController.clearTasks();
         success();
       } else {
@@ -88,8 +112,10 @@ class LoginController extends DefaultChangeNotifier {
       _userService.logout();
       setError(e.message);
     } finally {
-      hideLoading();
-      notifyListeners();
+      if (!disposed) {
+        hideLoading();
+        notifyListeners();
+      }
     }
   }
 

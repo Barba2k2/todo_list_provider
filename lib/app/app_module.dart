@@ -5,8 +5,13 @@ import 'package:provider/provider.dart';
 import 'app_widget.dart';
 import 'core/auth/auth_provider.dart';
 import 'core/database/sqlite_connection_factory.dart';
+import 'modules/home/home_controller.dart';
+import 'repositories/tasks/tasks_repository.dart';
+import 'repositories/tasks/tasks_repository_impl.dart';
 import 'repositories/user/user_repository.dart';
 import 'repositories/user/user_repository_impl.dart';
+import 'services/tasks/tasks_service.dart';
+import 'services/tasks/tasks_service_impl.dart';
 import 'services/user/user_service.dart';
 import 'services/user/user_service_impl.dart';
 
@@ -34,12 +39,30 @@ class AppModule extends StatelessWidget {
             userRepository: context.read(),
           ),
         ),
+        Provider<TasksRepository>(
+          create: (context) => TasksRepositoryImpl(
+            sqliteConnectionFactory: context.read(),
+          ),
+        ),
+        Provider<TasksService>(
+          create: (context) => TasksServiceImpl(
+            tasksRepository: context.read(),
+          ),
+        ),
         ChangeNotifierProvider(
           create: (context) => TodoListAuthProvider(
-            firebaseAuth: context.read(),
-            userService: context.read(),
+            firebaseAuth: context.read<FirebaseAuth>(),
+            userService: context.read<UserService>(),
           )..loadListener(),
           lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => HomeController(
+            tasksService: context.read<TasksService>(),
+          ),
+        ),
+        ProxyProvider<User?, String?>(
+          update: (context, user, previous) => user?.uid,
         ),
       ],
       child: const AppWidget(),

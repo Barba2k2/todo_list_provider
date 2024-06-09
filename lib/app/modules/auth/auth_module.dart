@@ -15,6 +15,7 @@ class AuthModule extends TodoListModule {
               create: (context) => LoginController(
                 homeController: context.read<HomeController>(),
                 userService: context.read(),
+                authProvider: context.read(),
               ),
             ),
             ChangeNotifierProvider(

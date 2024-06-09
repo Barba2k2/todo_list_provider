@@ -11,7 +11,8 @@ class MigrationV1 implements Migration {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           descricao VARCHAR(500) NOT NULL,
           data_hora DATETIME,
-          finalizado INTEGER
+          finalizado INTEGER,
+          user_id VARCHAR(100) NOT NULL
         )
       ''',
     );

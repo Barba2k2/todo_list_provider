@@ -9,10 +9,12 @@ import 'widgtes/calendar_button.dart';
 
 class TasksCreatePage extends StatefulWidget {
   final TaskCreateController _controller;
+  final String userId;
 
   const TasksCreatePage({
     super.key,
     required TaskCreateController controller,
+    required this.userId,
   }) : _controller = controller;
 
   @override
@@ -26,6 +28,7 @@ class _TasksCreatePageState extends State<TasksCreatePage> {
   @override
   void initState() {
     super.initState();
+    widget._controller.userId = widget.userId;
     DefaultListenerNotifier(
       changeNotifier: widget._controller,
     ).listener(
@@ -54,7 +57,6 @@ class _TasksCreatePageState extends State<TasksCreatePage> {
         actions: [
           IconButton(
             onPressed: () {
-              // _controller.saveTask();
               Navigator.of(context).pop();
             },
             icon: const Icon(
