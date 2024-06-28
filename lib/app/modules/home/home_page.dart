@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../../core/notifier/default_listener_notifier.dart';
 import '../../core/ui/theme_extensions.dart';
@@ -25,6 +28,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  BannerAd? _bannerAd;
+  bool _isBannerAdReady = false;
+  final adUnitId = 'ca-app-pub-7278601840642594/4280204245';
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +48,33 @@ class _HomePageState extends State<HomePage> {
       widget._homeController.loadTotalTasks();
       widget._homeController.findTasks(filter: TaskFilterEnum.today);
     });
+
+    _loadBannerAd();
+  }
+
+  void _loadBannerAd() {
+    _bannerAd = BannerAd(
+      adUnitId: adUnitId,
+      request: const AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          ad.dispose();
+          log('Failed to load a banner ad: ${error.message}');
+        },
+      ),
+    )..load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
   }
 
   Future<void> _goToCreateTask(BuildContext context) async {
@@ -121,27 +155,40 @@ class _HomePageState extends State<HomePage> {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-                minWidth: constraints.maxWidth,
-              ),
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: const IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      HomeHeader(),
-                      HomeFilter(),
-                      HomeWeekFilter(),
-                      HomeTasks(),
-                    ],
+          return Stack(
+            children: [
+              SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                    minWidth: constraints.maxWidth,
+                  ),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const IntrinsicHeight(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          HomeHeader(),
+                          HomeFilter(),
+                          HomeWeekFilter(),
+                          HomeTasks(),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+              if (_isBannerAdReady)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SizedBox(
+                    width: _bannerAd!.size.width.toDouble(),
+                    height: _bannerAd!.size.height.toDouble(),
+                    child: AdWidget(ad: _bannerAd!),
+                  ),
+                ),
+            ],
           );
         },
       ),
